@@ -1,0 +1,7 @@
+# Members 1–4: add PINNED dependencies required by your real adapters here.
+# Keep empty until the actual model/transcription stack is agreed.
+# Model checkpoints go in models/ and are not bundled in the source ZIP/image.
+torch
+transformers==5.18.0
+openai-whisper
+google-genai

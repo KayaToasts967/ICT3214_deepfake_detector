@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+*.pyc
+.runtime/
+.env
+artifacts/
+.workflow-state/
+release/
+.openai/
+models/*
+!models/README.md
+.venv-wsl/
+wavlm-deepfake-detector/
+*.zip

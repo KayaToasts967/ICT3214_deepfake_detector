@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Inspect uploaded audio and video with segment-level deepfake detection and separate scam-cue analysis.">
+  <title>VoiceScope | Audio authenticity analysis</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+<svg class="symbols" aria-hidden="true"><defs>
+  <symbol id="i-wave" viewBox="0 0 24 24"><path d="M3 10v4m4-8v12m5-16v20m5-16v12m4-8v4"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 16V3m-5 5 5-5 5 5M4 15v5a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></symbol>
+  <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6m0-10v1"/></symbol>
+  <symbol id="i-plug" viewBox="0 0 24 24"><path d="M8 2v5m8-5v5M6 7h12v4a6 6 0 0 1-12 0V7Zm6 10v5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H5a1 1 0 0 0-1 1v18a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V8l-6-6Zm0 0v6h6M8 13h8m-8 4h6"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="m12 2 9 4v6c0 5-9 10-9 10S3 17 3 12V6l9-4Z"/><path d="m8 12 3 3 5-6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v13m-5-5 5 5 5-5M4 17v4h16v-4"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 4 12 8-12 8V4Z"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+</defs></svg>
+<aside class="sidebar">
+  <a class="brand" href="/" aria-label="VoiceScope home"><span class="brand-mark"><svg><use href="#i-wave"/></svg></span>VoiceScope<span class="brand-dot">.</span></a>
+  <div class="workspace-label">SECURITY ANALYTICS</div>
+  <nav aria-label="Main navigation">
+    <button class="nav-item active" id="nav-analyze"><svg><use href="#i-grid"/></svg>Analyze media<span class="nav-indicator"></span></button>
+    <button class="nav-item" id="nav-method"><svg><use href="#i-info"/></svg>How it works</button>
+    <button class="nav-item" id="nav-connect"><svg><use href="#i-plug"/></svg>Model connection</button>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="project-tag"><span class="project-dot"></span>ICT3214 TEAM PROJECT</div>
+    <p>From recording<br>to reviewable evidence.</p>
+    <div class="member-card"><span class="avatar">05</span><div><strong>Integration workspace</strong><small>Member 5 · Frontend & API</small></div></div>
+  </div>
+</aside>
+<div class="app-shell">
+  <header class="topbar"><div class="breadcrumb">Workspace <span>/</span> <strong>Media analysis</strong></div><button class="connection-chip" id="connection"><span class="status-dot"></span><span id="connection-label">Checking API…</span><svg><use href="#i-plug"/></svg></button></header>
+  <main>
+    <div class="page-heading"><div><div class="eyebrow"><span></span>AUDIO FORENSICS WORKSPACE</div><h1>Listen closer. <span>See the evidence.</span></h1><p>Inspect a recording for synthetic speech, then explore where the detector responds.</p></div><div class="heading-seal"><svg><use href="#i-shield"/></svg><span>AUDIO<br>AUTHENTICITY</span></div></div>
+    <div class="intro-grid">
+      <section class="panel upload-panel" aria-labelledby="upload-title">
+        <div class="panel-header"><div><span class="step-number">01</span><h2 id="upload-title">Add your recording</h2></div><span class="subtle-label">AUDIO OR VIDEO</span></div>
+        <input type="file" id="file-input" accept=".wav,.mp3,.m4a,.flac,.ogg,.webm,.mp4,.mov,.mkv" hidden>
+        <button class="dropzone" id="dropzone"><span class="upload-icon"><svg><use href="#i-upload"/></svg></span><strong>Drop a recording here</strong><span>or <b>browse files</b> to get started</span><small>WAV, MP3, M4A, FLAC, OGG · MP4, MOV, MKV, WEBM</small><small>Up to 100 MB · 2 seconds to 10 minutes</small></button>
+        <div id="selected-file" class="selected-file" hidden><div class="file-icon"><svg><use href="#i-file"/></svg></div><div><strong id="filename"></strong><small id="filemeta"></small></div><button class="icon-button" id="remove-file" aria-label="Remove selected file"><svg><use href="#i-close"/></svg></button></div>
+        <div class="upload-note"><svg><use href="#i-wave"/></svg><span>Video uploads are analyzed through their audio track.</span></div>
+        <div class="mode-row"><label class="switch-label"><input type="checkbox" id="demo-mode"><span class="switch"></span><span>Use demonstration scores</span></label><span class="mode-help">For integration testing</span></div>
+        <p class="demo-explainer" id="demo-explainer" hidden>Audio is decoded and split normally. Scores are simulated and say nothing about this recording’s authenticity.</p>
+        <div class="action-row"><button class="primary-button" id="analyze" disabled>Analyze recording<svg><use href="#i-arrow"/></svg></button><button class="text-button" id="load-example">Explore an example<svg><use href="#i-arrow"/></svg></button></div>
+        <div id="message" class="message" role="status" hidden></div>
+        <div class="progress-area" id="progress-area" hidden><div><strong id="progress-stage">Uploading recording</strong><span id="progress-number">0%</span></div><progress id="progress" value="0" max="100"></progress><p id="progress-detail">Preparing your recording.</p></div>
+      </section>
+      <section class="pipeline-panel" aria-labelledby="pipeline-title"><div class="eyebrow muted">ONE RECORDING. TWO SECURITY SIGNALS.</div><h2 id="pipeline-title">A clearer picture<br>of your audio.</h2><ol class="pipeline-steps"><li><span>1</span><div><strong>Extract & standardize</strong><p>Audio track → mono, 16 kHz PCM.</p></div></li><li><span>2</span><div><strong>Inspect overlapping windows</strong><p>4-second segments with a 2-second hop.</p></div></li><li><span>3</span><div><strong>Locate elevated scores</strong><p>Review timestamps and replay the evidence.</p></div></li><li><span>4</span><div><strong>Assess content separately</strong><p>Transcript & scam cues via the team’s pipeline.</p></div></li></ol><div class="pipeline-footer"><svg><use href="#i-info"/></svg><p>Detection is an estimate. An inconclusive result is part of an honest assessment.</p></div></section>
+    </div>
+    <section class="empty-report" id="empty-report"><div class="mini-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div><h2>The evidence starts here.</h2><p>Your assessment, scored timeline, and detailed report will appear after analysis.</p></div><span class="waiting-tag"><span></span>AWAITING RECORDING</span></section>
+    <section id="results" hidden aria-labelledby="report-title">
+      <div class="report-heading"><div><div class="eyebrow muted">02 / ANALYSIS REPORT</div><h2 id="report-title">Recording overview</h2><p id="report-subtitle"></p></div><div class="report-actions"><button class="secondary-button" id="export-json"><svg><use href="#i-download"/></svg>JSON</button><button class="secondary-button" id="export-csv">CSV</button><button class="secondary-button" id="print-report">Print / PDF</button><button class="icon-button" id="delete-report" aria-label="Delete analysis and retained audio"><svg><use href="#i-close"/></svg></button></div></div>
+      <div class="demo-banner" id="demo-banner" hidden><svg><use href="#i-info"/></svg><div><strong>Demonstration report — simulated detector scores</strong><span>No trained model evaluated this recording. Use this report to test the interface and integration.</span></div></div>
+      <div class="summary-grid"><article class="summary-card verdict-card"><div class="summary-label">AUTHENTICITY ASSESSMENT</div><h3 id="verdict"></h3><p id="verdict-detail"></p><span id="verdict-pill" class="tag"></span></article><article class="summary-card"><div class="summary-label">OVERALL SYNTHETIC SCORE</div><div class="big-number" id="overall-score"></div><div class="score-meter"><span id="score-meter-fill"></span></div><p>Time-weighted detector score · not a calibrated probability</p></article><article class="summary-card"><div class="summary-label">ELEVATED REGIONS</div><div class="big-number" id="region-count"></div><p id="region-detail"></p><span class="tag neutral" id="window-count"></span></article><article class="summary-card"><div class="summary-label">SCAM-CUE ANALYSIS</div><h3 id="scam-risk"></h3><p id="scam-detail"></p><span class="tag neutral">Separate security signal</span></article></div>
+      <section class="panel timeline-panel" aria-labelledby="timeline-title"><div class="panel-header"><div><span class="step-number">03</span><h2 id="timeline-title">Inspect the timeline</h2></div><div class="legend"><span><i class="low"></i>Low score</span><span><i class="mid"></i>Uncertain</span><span><i class="high"></i>Elevated</span><span><i class="none"></i>Unscored</span></div></div><div class="timeline-meta"><span id="timeline-filename"></span><span id="timeline-meta"></span></div><div class="waveform" id="waveform" aria-hidden="true"></div><div class="time-axis" id="time-axis"></div><div class="segment-track" id="segment-track" aria-label="Scored audio windows"></div><div class="timeline-caption"><span>Each button represents one overlapping window. Select a window to inspect its score.</span><strong>Provisional elevated threshold: ≥ 65%</strong></div><div class="player-row"><audio id="audio-player" controls preload="metadata"></audio><span id="playback-note">Replay the normalized audio track.</span></div><div class="evidence-detail" id="evidence-detail"><span class="eyebrow muted">SELECTED WINDOW</span><h3 id="evidence-title"></h3><p id="evidence-summary"></p><ul id="model-evidence"></ul><button class="secondary-button" id="play-window"><svg><use href="#i-play"/></svg>Replay this window</button></div></section>
+      <div class="detail-grid"><section class="panel" aria-labelledby="regions-title"><div class="panel-header"><div><span class="step-number">04</span><h2 id="regions-title">Standout regions</h2></div><span class="subtle-label">LOCALIZED EVIDENCE</span></div><div id="region-list"></div><p class="panel-footnote">Ranges merge overlapping elevated windows. Their boundaries include context and do not mark exact edits.</p></section><section class="panel" aria-labelledby="transcript-title"><div class="panel-header"><div><span class="step-number">05</span><h2 id="transcript-title">Transcript & scam cues</h2></div></div><div id="transcript-content"></div><div id="scam-cues"></div></section></div>
+      <details class="method-details"><summary>Processing details & interpretation limits<svg><use href="#i-info"/></svg></summary><div id="processing-details"></div><ul id="warnings"></ul></details>
+    </section>
+    <footer class="footer"><span>VoiceScope <span class="footer-dot">/</span> ICT3214 Security Analytics</span><span>Uploads stay on this computer · retained for 30 minutes</span></footer>
+  </main>
+</div>
+<dialog id="info-dialog"><div class="dialog-heading"><h2 id="dialog-title"></h2><button class="icon-button" id="close-dialog" aria-label="Close dialog"><svg><use href="#i-close"/></svg></button></div><div id="dialog-content"></div></dialog>
+</body></html>
